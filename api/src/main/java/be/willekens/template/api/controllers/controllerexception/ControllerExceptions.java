@@ -49,4 +49,22 @@ public class ControllerExceptions {
         logger.error("The user tried to register an item with an invalid stock value");
         httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, invalidStockValue.getMessage());
     }
+
+    @ExceptionHandler(CustomerDoesNotExistException.class)
+    public void customerDoesNotExist(CustomerDoesNotExistException customerDoesNotExistException, HttpServletResponse httpServletResponse) throws IOException {
+        logger.error("The user tried to place an order without being a registered customer");
+        httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, customerDoesNotExistException.getMessage());
+    }
+
+    @ExceptionHandler(NotAuthorizedException.class)
+    public void notAuthorized(NotAuthorizedException notAuthorizedException, HttpServletResponse httpServletResponse) throws IOException {
+        logger.error("The user tried to perform an action without the right permissions");
+        httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, notAuthorizedException.getMessage());
+    }
+
+    @ExceptionHandler(ItemDoesNotExistException.class)
+    public void itemDoesNotExist(ItemDoesNotExistException itemDoesNotExistException, HttpServletResponse httpServletResponse) throws IOException {
+        logger.error("The requested item doesn't exist");
+        httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, itemDoesNotExistException.getMessage());
+    }
 }

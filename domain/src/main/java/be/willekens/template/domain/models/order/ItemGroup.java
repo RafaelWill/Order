@@ -18,6 +18,7 @@ public class ItemGroup {
         this.totalPrice = calculateTotalPrice();
     }
 
+
     private double calculateTotalPrice() {
         return amountOfItems * item.getPrice();
     }

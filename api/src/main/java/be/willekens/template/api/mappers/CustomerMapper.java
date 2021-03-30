@@ -11,11 +11,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomerMapper {
 
-    public CustomerMapper() {
-    }
-
     public CustomerDto mapToCustomerDto(Customer customer) {
         return new CustomerDto()
+                .setId(customer.getId().toString())
                 .setFirstName(customer.getFirstName())
                 .setLastName(customer.getLastName())
                 .setEmail(customer.getEmail())

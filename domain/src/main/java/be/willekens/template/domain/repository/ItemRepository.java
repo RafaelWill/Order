@@ -1,13 +1,9 @@
 package be.willekens.template.domain.repository;
 
-import be.willekens.template.domain.models.customer.Customer;
 import be.willekens.template.domain.models.item.Item;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Repository
 public class ItemRepository {
@@ -23,4 +19,7 @@ public class ItemRepository {
         return Collections.unmodifiableSet(items);
     }
 
+    public Optional<Item> getItemById(String itemId) {
+        return items.stream().filter(item -> item.getId().toString().equals(itemId)).findFirst();
+    }
 }

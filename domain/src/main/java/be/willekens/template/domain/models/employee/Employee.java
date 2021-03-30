@@ -11,7 +11,7 @@ public class Employee {
 
     private static final Logger logger = LoggerFactory.getLogger(Employee.class);
 
-    private UUID id;
+    private final UUID id;
     private String name;
     private String email;
     private Role role;

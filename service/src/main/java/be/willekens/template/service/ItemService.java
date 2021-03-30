@@ -3,10 +3,13 @@ package be.willekens.template.service;
 import be.willekens.template.domain.models.item.Item;
 import be.willekens.template.domain.repository.ItemRepository;
 import be.willekens.template.infrastructure.exceptions.DuplicateItemNameException;
+import be.willekens.template.infrastructure.exceptions.ItemDoesNotExistException;
 import be.willekens.template.infrastructure.exceptions.NotAuthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class ItemService {
@@ -19,6 +22,10 @@ public class ItemService {
     public ItemService(ItemRepository itemRepository, EmployeeService employeeService) {
         this.itemRepository = itemRepository;
         this.employeeService = employeeService;
+    }
+
+    public Item getItemById(String itemId) {
+        return checkIfItemExists(itemRepository.getItemById(itemId));
     }
 
     public Item addItem(Item item, String authorizationId) {
@@ -41,5 +48,13 @@ public class ItemService {
     private boolean checkIfItemNameExists(Item newItem) {
         return itemRepository.getAllItems().stream()
                 .anyMatch(item -> item.getName().equalsIgnoreCase(newItem.getName()));
+    }
+
+    private Item checkIfItemExists(Optional<Item> item) {
+        if (item.isEmpty()) {
+            logger.warn("No item was found");
+            throw new ItemDoesNotExistException("You can only order items that exist within our database");
+        }
+        return item.get();
     }
 }

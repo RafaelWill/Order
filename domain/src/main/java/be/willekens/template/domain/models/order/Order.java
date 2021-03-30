@@ -9,7 +9,7 @@ public class Order {
 
     private static final Logger logger = LoggerFactory.getLogger(Order.class);
 
-    private UUID id;
+    private final UUID id;
     private String customerId;
     private final List<ItemGroup> listOfOrderedItems = new LinkedList<>();
     private double totalPrice;
@@ -35,5 +35,13 @@ public class Order {
 
     public Collection<ItemGroup> getListOfOrderedItems() {
         return Collections.unmodifiableList(listOfOrderedItems);
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
     }
 }

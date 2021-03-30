@@ -15,7 +15,7 @@ public class Item {
     
     private static final Logger logger = LoggerFactory.getLogger(Item.class);
 
-    private UUID id;
+    private final UUID id;
     private String name;
     private String description;
     private double price;
@@ -72,7 +72,5 @@ public class Item {
     public int getAmountInStock() {
         return amountInStock;
     }
-    
-    
 
 }
