@@ -5,13 +5,14 @@ import be.willekens.template.infrastructure.utils.EmailUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Customer {
 
     private static final Logger logger = LoggerFactory.getLogger(Customer.class);
 
-    private UUID id;
+    private final UUID id;
     private String firstName;
     private String lastName;
     private String email;
@@ -57,5 +58,18 @@ public class Customer {
             throw new InvalidEmailException("The e-mail: " + email + " is invalid");
         }
         return email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Customer)) return false;
+        Customer customer = (Customer) o;
+        return Objects.equals(email, customer.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
     }
 }
