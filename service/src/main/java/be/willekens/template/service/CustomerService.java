@@ -1,6 +1,6 @@
 package be.willekens.template.service;
 
-import be.willekens.template.domain.models.Customer;
+import be.willekens.template.domain.models.customer.Customer;
 import be.willekens.template.domain.repository.CustomerRepository;
 import be.willekens.template.infrastructure.exceptions.DuplicateEmailException;
 import org.slf4j.Logger;
@@ -23,7 +23,7 @@ public class CustomerService {
     public Customer addCustomer (Customer customer) {
         if (!checkIfEmailExists(customer)) {
             logger.warn("A user tried to register an e-mail that already exists in our database");
-            throw new DuplicateEmailException("This e-mail already exists in our database");
+            throw new DuplicateEmailException("The e-mail, " + customer.getEmail() + " already exists in our database");
         }
         return customerRepository.addCustomer(customer);
     }

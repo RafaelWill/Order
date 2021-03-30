@@ -1,4 +1,4 @@
-package be.willekens.template.domain.models;
+package be.willekens.template.domain.models.customer;
 
 public class Address {
 

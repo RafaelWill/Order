@@ -1,9 +1,9 @@
 package be.willekens.template.api.mappers;
 
-import be.willekens.template.api.dto.CreateCustomerDto;
-import be.willekens.template.api.dto.CustomerDto;
-import be.willekens.template.domain.models.Address;
-import be.willekens.template.domain.models.Customer;
+import be.willekens.template.api.dto.customer.CreateCustomerDto;
+import be.willekens.template.api.dto.customer.CustomerDto;
+import be.willekens.template.domain.models.customer.Address;
+import be.willekens.template.domain.models.customer.Customer;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.stereotype.Component;
 

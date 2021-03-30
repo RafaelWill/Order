@@ -1,5 +1,8 @@
-package be.willekens.template.api.dto;
+package be.willekens.template.api.dto.customer;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CustomerDto {
 
     private String id;

@@ -1,4 +1,4 @@
-package be.willekens.template.domain.models;
+package be.willekens.template.domain.models.customer;
 
 import be.willekens.template.infrastructure.exceptions.InvalidEmailException;
 import be.willekens.template.infrastructure.utils.EmailUtils;

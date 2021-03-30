@@ -1,6 +1,6 @@
 package be.willekens.template.domain.repository;
 
-import be.willekens.template.domain.models.Customer;
+import be.willekens.template.domain.models.customer.Customer;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;

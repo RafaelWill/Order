@@ -1,7 +1,6 @@
 package be.willekens.template.api.controllers.controllerexception;
 
-import be.willekens.template.infrastructure.exceptions.DuplicateEmailException;
-import be.willekens.template.infrastructure.exceptions.InvalidEmailException;
+import be.willekens.template.infrastructure.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -25,5 +24,29 @@ public class ControllerExceptions {
     public void duplicateEmail(DuplicateEmailException duplicateEmailException, HttpServletResponse httpServletResponse) throws IOException {
         logger.error("The user tried to register an e-mail that already exists in our database", duplicateEmailException);
         httpServletResponse.sendError(HttpServletResponse.SC_CONFLICT, duplicateEmailException.getMessage());
+    }
+
+    @ExceptionHandler(DuplicateItemNameException.class)
+    public void duplicateItemName(DuplicateItemNameException duplicateItemNameException, HttpServletResponse httpServletResponse) throws IOException {
+        logger.error("The user tried to register an item that already exists in our database");
+        httpServletResponse.sendError(HttpServletResponse.SC_CONFLICT, duplicateItemNameException.getMessage());
+    }
+
+    @ExceptionHandler(InvalidItemNameException.class)
+    public void invalidItemName(InvalidItemNameException invalidItemNameException, HttpServletResponse httpServletResponse) throws IOException {
+        logger.error("The user tried to register an item with an invalid item name");
+        httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, invalidItemNameException.getMessage());
+    }
+
+    @ExceptionHandler(InvalidPriceException.class)
+    public void invalidPrice(InvalidPriceException invalidPriceException, HttpServletResponse httpServletResponse) throws IOException {
+        logger.error("The user tried to register an item with an invalid price value");
+        httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, invalidPriceException.getMessage());
+    }
+
+    @ExceptionHandler(InvalidStockValue.class)
+    public void invalidStockValue(InvalidStockValue invalidStockValue, HttpServletResponse httpServletResponse) throws IOException {
+        logger.error("The user tried to register an item with an invalid stock value");
+        httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, invalidStockValue.getMessage());
     }
 }

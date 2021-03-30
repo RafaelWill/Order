@@ -1,4 +1,4 @@
-package be.willekens.template.api.dto;
+package be.willekens.template.api.dto.customer;
 
 public class CreateCustomerDto {
 

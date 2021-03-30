@@ -1,7 +1,7 @@
 package be.willekens.template.api.controllers;
 
-import be.willekens.template.api.dto.CreateCustomerDto;
-import be.willekens.template.api.dto.CustomerDto;
+import be.willekens.template.api.dto.customer.CreateCustomerDto;
+import be.willekens.template.api.dto.customer.CustomerDto;
 import be.willekens.template.api.mappers.CustomerMapper;
 import be.willekens.template.service.CustomerService;
 import org.slf4j.Logger;

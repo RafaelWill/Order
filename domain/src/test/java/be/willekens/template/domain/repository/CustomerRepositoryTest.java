@@ -1,11 +1,10 @@
 package be.willekens.template.domain.repository;
 
-import be.willekens.template.domain.models.Address;
-import be.willekens.template.domain.models.Customer;
+import be.willekens.template.domain.models.customer.Address;
+import be.willekens.template.domain.models.customer.Customer;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class CustomerRepositoryTest {
 

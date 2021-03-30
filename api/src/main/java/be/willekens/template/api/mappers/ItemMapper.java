@@ -1,0 +1,23 @@
+package be.willekens.template.api.mappers;
+
+import be.willekens.template.api.dto.item.CreateItemDto;
+import be.willekens.template.api.dto.item.ItemDto;
+import be.willekens.template.domain.models.item.Item;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ItemMapper {
+
+    public Item createItem(CreateItemDto createItemDto) {
+        return new Item(createItemDto.getName(), createItemDto.getDescription(), createItemDto.getPrice(),createItemDto.getAmountInStock());
+    }
+
+    public ItemDto mapToDto(Item item) {
+        return new ItemDto()
+                .setId(item.getId().toString())
+                .setName(item.getName())
+                .setDescription(item.getDescription())
+                .setPrice(item.getPrice())
+                .setAmountInStock(item.getAmountInStock());
+    }
+}
