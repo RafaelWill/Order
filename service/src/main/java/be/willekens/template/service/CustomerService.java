@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.stream.Collectors;
-
 @Service
 public class CustomerService {
 
@@ -31,9 +29,6 @@ public class CustomerService {
     }
 
     private boolean checkIfEmailExists(Customer newCustomer) {
-        return customerRepository.getAllCustomers().stream()
-                .filter(customer -> customer.getEmail().equalsIgnoreCase(newCustomer.getEmail()))
-                .collect(Collectors.toList())
-                .isEmpty();
+        return customerRepository.getAllCustomers().stream().anyMatch(customer -> customer.getEmail().equalsIgnoreCase(newCustomer.getEmail()));
     }
 }
