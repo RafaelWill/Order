@@ -36,7 +36,7 @@ public class OrderService {
     }
 
     private void validateItemIds(Order order) {
-        order.getListOfOrderedItems().forEach(item -> itemService.getItemById(item.getItem().getId().toString()));
+        order.getListOfOrderedItems().forEach(item -> itemService.getItemById(item.getItemCopy().getId().toString()));
     }
 
 }

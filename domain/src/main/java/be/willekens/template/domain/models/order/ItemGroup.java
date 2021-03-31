@@ -1,37 +1,37 @@
 package be.willekens.template.domain.models.order;
 
 import be.willekens.template.domain.models.item.Item;
+import be.willekens.template.domain.models.item.ItemCopy;
 
 import java.time.LocalDate;
 
 public class ItemGroup {
 
-    private final Item item;
+    private final ItemCopy itemCopy;
     private int amountOfItems;
     private LocalDate shippingDate;
-    private double totalPrice;
+    private final double totalPrice;
 
     public ItemGroup(Item item, int amountOfItems) {
-        this.item = item;
+        this.itemCopy = new ItemCopy(item.getId(), item.getName(), item.getDescription(), item.getPrice());
         this.amountOfItems = amountOfItems;
-        this.shippingDate = determineShippingDate();
+        this.shippingDate = determineShippingDate(item.getAmountInStock(), amountOfItems);
         this.totalPrice = calculateTotalPrice();
     }
 
-
     private double calculateTotalPrice() {
-        return amountOfItems * item.getPrice();
+        return amountOfItems * itemCopy.getPrice();
     }
 
-    private LocalDate determineShippingDate() {
-        if (item.getAmountInStock() < amountOfItems) {
+    private LocalDate determineShippingDate(int amountInStock, int amountOfItems) {
+        if (amountInStock < amountOfItems) {
             return LocalDate.now().plusDays(7);
         }
         return LocalDate.now().plusDays(1);
     }
 
-    public Item getItem() {
-        return item;
+    public ItemCopy getItemCopy() {
+        return itemCopy;
     }
 
     public int getAmountOfItems() {
@@ -45,4 +45,5 @@ public class ItemGroup {
     public double getTotalPrice() {
         return totalPrice;
     }
+
 }

@@ -29,6 +29,14 @@ public class Item {
         this.amountInStock = validateAmountInStock(amountInStock);
     }
 
+    private Item(UUID id, String name, String description, double price, int amountInStock) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.amountInStock = amountInStock;
+    }
+
     private String validateItemName(String name) {
         if (name.isBlank() || name.isEmpty()) {
             logger.warn("The user tried to register an invalid item name: " + name);
@@ -91,5 +99,9 @@ public class Item {
     public Item setAmountInStock(int amountInStock) {
         this.amountInStock = validateAmountInStock(amountInStock);
         return this;
+    }
+
+    public Item deepCloneItem() {
+        return new Item(this.getId(),this.getName(),this.getDescription(),this.getPrice(),this.getAmountInStock());
     }
 }

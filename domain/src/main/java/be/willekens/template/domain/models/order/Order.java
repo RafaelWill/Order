@@ -1,12 +1,8 @@
 package be.willekens.template.domain.models.order;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.*;
 
 public class Order {
-
 
     private final UUID id;
     private final String customerId;

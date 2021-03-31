@@ -31,7 +31,7 @@ public class ItemController {
         return itemMapper.mapToDto(itemService.addItem(itemMapper.createItem(createItemDto),authorizationId));
     }
 
-    @PostMapping(path = "/{itemId}", consumes = "application/json", produces = "application/json")
+    @PutMapping(path = "/{itemId}", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ItemDto updateItem(@RequestHeader String authorizationId, @PathVariable String itemId, @RequestBody UpdateItemDto updateItemDto) {
         logger.info("A user with id " + authorizationId + " is requesting to update an item with id " + itemId);

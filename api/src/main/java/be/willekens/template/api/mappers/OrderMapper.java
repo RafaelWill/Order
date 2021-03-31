@@ -7,6 +7,7 @@ import be.willekens.template.api.dto.order.SubmittedOrderDto;
 import be.willekens.template.domain.models.order.ItemGroup;
 import be.willekens.template.domain.models.order.Order;
 import be.willekens.template.service.ItemService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -14,6 +15,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class OrderMapper {
+
+    private final ModelMapper modelMapper = new ModelMapper();
 
     private final ItemService itemService;
 
@@ -30,11 +33,12 @@ public class OrderMapper {
     }
 
     public OrderDto mapToDto(Order addOrder) {
-        return new OrderDto()
-                .setOrderId(addOrder.getId().toString())
-                .setCustomerId(addOrder.getCustomerId())
-                .setOrderedItems(mapListToItemGroupDto(addOrder.getListOfOrderedItems()))
-                .setTotalPriceOfTheOrder(addOrder.getTotalPrice());
+        return modelMapper.map(addOrder, OrderDto.class);
+//        return new OrderDto()
+//                .setOrderId(addOrder.getId().toString())
+//                .setCustomerId(addOrder.getCustomerId())
+//                .setOrderedItems(mapListToItemGroupDto(addOrder.getListOfOrderedItems()))
+//                .setTotalPriceOfTheOrder(addOrder.getTotalPrice());
     }
 
     private Collection<ItemGroupDto> mapListToItemGroupDto(Collection<ItemGroup> listOfOrderedItems) {
@@ -42,10 +46,11 @@ public class OrderMapper {
     }
 
     private ItemGroupDto mapToItemGroupDto(ItemGroup itemGroup) {
-        return new ItemGroupDto()
-                .setItemId(itemGroup.getItem().getId().toString())
-                .setAmountOfItems(itemGroup.getAmountOfItems())
-                .setShippingDate(itemGroup.getShippingDate())
-                .setTotalPrice(itemGroup.getTotalPrice());
+        return modelMapper.map(itemGroup, ItemGroupDto.class);
+//        return new ItemGroupDto()
+//                .setItemId(itemGroup.getItem().getId().toString())
+//                .setAmountOfItems(itemGroup.getAmountOfItems())
+//                .setShippingDate(itemGroup.getShippingDate())
+//                .setTotalPrice(itemGroup.getTotalPrice());
     }
 }

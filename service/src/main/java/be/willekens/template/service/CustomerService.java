@@ -59,4 +59,5 @@ public class CustomerService {
     private boolean checkIfEmailExists(Customer newCustomer) {
         return customerRepository.getAllCustomers().stream().anyMatch(customer -> customer.getEmail().equalsIgnoreCase(newCustomer.getEmail()));
     }
+
 }

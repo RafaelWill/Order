@@ -31,6 +31,7 @@ public class CustomerController {
     public CustomerDto createACustomer (@RequestBody CreateCustomerDto createCustomerDto) {
         logger.info("A user is requesting to create a new member account");
         return  customerMapper.mapToCustomerDto(customerService.addCustomer(customerMapper.createCustomer(createCustomerDto)));
+//        return customerMapper.mapToCustomerDto(customerService.addCustomer(customerService.createCustomer(createCustomerDto)));
     }
 
     @GetMapping(produces = "application/json")
