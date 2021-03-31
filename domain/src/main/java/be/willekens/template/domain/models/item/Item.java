@@ -73,4 +73,23 @@ public class Item {
         return amountInStock;
     }
 
+    public Item setName(String name) {
+        this.name = validateItemName(name);
+        return this;
+    }
+
+    public Item setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public Item setPrice(double price) {
+        this.price = validatePrice(price);
+        return this;
+    }
+
+    public Item setAmountInStock(int amountInStock) {
+        this.amountInStock = validateAmountInStock(amountInStock);
+        return this;
+    }
 }
