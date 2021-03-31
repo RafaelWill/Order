@@ -2,6 +2,7 @@ package be.willekens.template.api.mappers;
 
 import be.willekens.template.api.dto.item.CreateItemDto;
 import be.willekens.template.api.dto.item.ItemDto;
+import be.willekens.template.api.dto.item.UpdateItemDto;
 import be.willekens.template.domain.models.item.Item;
 import org.springframework.stereotype.Component;
 
@@ -19,5 +20,9 @@ public class ItemMapper {
                 .setDescription(item.getDescription())
                 .setPrice(item.getPrice())
                 .setAmountInStock(item.getAmountInStock());
+    }
+
+    public Item updateItemToItem(UpdateItemDto updateItemDto) {
+        return new Item(updateItemDto.getName(), updateItemDto.getDescription(), updateItemDto.getPrice(), updateItemDto.getAmountInStock());
     }
 }

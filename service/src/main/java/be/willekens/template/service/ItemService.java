@@ -30,7 +30,7 @@ public class ItemService {
 
     public Item addItem(Item item, String authorizationId) {
         if (!employeeService.isAdmin(authorizationId)) {
-            logger.warn("A user tried with id " + authorizationId + " to register a new item without the right permissions");
+            logger.warn("A user with id " + authorizationId + " tried to register a new item without the right permissions");
             throw new NotAuthorizedException("You are not authorized to perform this action");
         }
         if (checkIfItemNameExists(item)) {
@@ -38,6 +38,15 @@ public class ItemService {
             throw new DuplicateItemNameException("This name " + item.getName() + " already exists in our database");
         }
         return itemRepository.addItem(item);
+    }
+
+    public Item updateItem(String authorizationId, String itemId, Item updateItemToItem) {
+        if (!employeeService.isAdmin(authorizationId)) {
+            logger.warn("A user with id " + authorizationId + " to update an item without the right permissions");
+            throw new NotAuthorizedException("You are not authorized to perform this action");
+        }
+        checkIfItemExists(itemRepository.getItemById(itemId));
+        return itemRepository.updateItem(itemId, updateItemToItem);
     }
 
     private boolean checkIfItemNameExists(Item newItem) {

@@ -22,4 +22,12 @@ public class ItemRepository {
     public Optional<Item> getItemById(String itemId) {
         return items.stream().filter(item -> item.getId().toString().equals(itemId)).findFirst();
     }
+
+    public Item updateItem(String itemId, Item updatedItem) {
+        return getItemById(itemId).get()
+                .setName(updatedItem.getName())
+                .setDescription(updatedItem.getDescription())
+                .setPrice(updatedItem.getPrice())
+                .setAmountInStock(updatedItem.getAmountInStock());
+    }
 }

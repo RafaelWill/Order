@@ -35,6 +35,6 @@ public class ItemController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ItemDto updateItem(@RequestHeader String authorizationId, @PathVariable String itemId, @RequestBody UpdateItemDto updateItemDto) {
         logger.info("A user with id " + authorizationId + " is requesting to update an item with id " + itemId);
-        return itemMapper.mapToDto(itemService.updateItem(itemId, updateItemDto));
+        return itemMapper.mapToDto(itemService.updateItem(authorizationId ,itemId, itemMapper.updateItemToItem(updateItemDto)));
     }
 }
