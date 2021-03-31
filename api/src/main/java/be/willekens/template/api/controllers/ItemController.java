@@ -25,8 +25,8 @@ public class ItemController {
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemDto addItem(@RequestBody CreateItemDto createItemDto) {
-        logger.info("A user with id " + createItemDto.getAuthorizationId() + " is requesting permission to create a new item");
-        return itemMapper.mapToDto(itemService.addItem(itemMapper.createItem(createItemDto),createItemDto.getAuthorizationId()));
+    public ItemDto addItem(@RequestHeader String authorizationId, @RequestBody CreateItemDto createItemDto) {
+        logger.info("A user with id " + authorizationId + " is requesting permission to create a new item");
+        return itemMapper.mapToDto(itemService.addItem(itemMapper.createItem(createItemDto),authorizationId));
     }
 }

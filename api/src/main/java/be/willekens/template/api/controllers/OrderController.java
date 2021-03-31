@@ -25,9 +25,9 @@ public class OrderController {
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderDto placeAnOrder (@RequestBody SubmittedOrderDto submittedOrderDto ) {
+    public OrderDto placeAnOrder (@RequestHeader String customerId, @RequestBody SubmittedOrderDto submittedOrderDto ) {
         logger.info("A user is requesting to create a new order");
-        return orderMapper.mapToDto(orderService.addOrder(orderMapper.createOrder(submittedOrderDto),submittedOrderDto.getCustomerId()));
+        return orderMapper.mapToDto(orderService.addOrder(orderMapper.createOrder(submittedOrderDto, customerId),customerId));
     }
 
 }

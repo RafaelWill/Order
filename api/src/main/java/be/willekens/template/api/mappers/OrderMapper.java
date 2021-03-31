@@ -21,8 +21,8 @@ public class OrderMapper {
         this.itemService = itemService;
     }
 
-    public Order createOrder(SubmittedOrderDto submittedOrderDto) {
-        return new Order(submittedOrderDto.getOrderedItems().stream().map(this::createItemGroup).collect(Collectors.toList()), submittedOrderDto.getCustomerId());
+    public Order createOrder(SubmittedOrderDto submittedOrderDto, String customerId) {
+        return new Order(submittedOrderDto.getOrderedItems().stream().map(this::createItemGroup).collect(Collectors.toList()), customerId);
     }
 
     private ItemGroup createItemGroup(OrderedItemGroupDto orderedItemGroupDto) {

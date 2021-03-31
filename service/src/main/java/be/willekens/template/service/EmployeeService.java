@@ -18,4 +18,9 @@ public class EmployeeService {
     public Collection<Employee> getAllEmployees() {
         return employeeRepository.getAllEmployees();
     }
+
+    public boolean isAdmin(String authorizationId) {
+        return employeeRepository.getAllEmployees().stream()
+                .anyMatch(id -> id.getId().toString().equals(authorizationId));
+    }
 }

@@ -7,6 +7,9 @@ import be.willekens.template.domain.models.customer.Customer;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 @Component
 public class CustomerMapper {
@@ -28,5 +31,9 @@ public class CustomerMapper {
         return new Customer(createCustomerDto.getFirstName(), createCustomerDto.getLastName(), createCustomerDto.getEmail(),
                 new Address(createCustomerDto.getStreetName(), createCustomerDto.getHouseNumber(), createCustomerDto.getPostalCode(), createCustomerDto.getCity()),
                 createCustomerDto.getPhoneNumber());
+    }
+
+    public Collection<CustomerDto> mapListToCustomerDto(Collection<Customer> allCustomers) {
+        return allCustomers.stream().map(this::mapToCustomerDto).collect(Collectors.toList());
     }
 }

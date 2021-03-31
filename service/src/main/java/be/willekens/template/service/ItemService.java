@@ -29,7 +29,7 @@ public class ItemService {
     }
 
     public Item addItem(Item item, String authorizationId) {
-        if (!isAdmin(authorizationId)) {
+        if (!employeeService.isAdmin(authorizationId)) {
             logger.warn("A user tried with id " + authorizationId + " to register a new item without the right permissions");
             throw new NotAuthorizedException("You are not authorized to perform this action");
         }
@@ -38,11 +38,6 @@ public class ItemService {
             throw new DuplicateItemNameException("This name " + item.getName() + " already exists in our database");
         }
         return itemRepository.addItem(item);
-    }
-
-    private boolean isAdmin(String authorizationId) {
-        return employeeService.getAllEmployees().stream()
-                .anyMatch(id -> id.getId().toString().equals(authorizationId));
     }
 
     private boolean checkIfItemNameExists(Item newItem) {

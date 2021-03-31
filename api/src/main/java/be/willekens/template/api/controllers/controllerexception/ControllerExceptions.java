@@ -52,7 +52,7 @@ public class ControllerExceptions {
 
     @ExceptionHandler(CustomerDoesNotExistException.class)
     public void customerDoesNotExist(CustomerDoesNotExistException customerDoesNotExistException, HttpServletResponse httpServletResponse) throws IOException {
-        logger.error("The user tried to place an order without being a registered customer");
+        logger.error("The user tried access a customer that does not exist");
         httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, customerDoesNotExistException.getMessage());
     }
 

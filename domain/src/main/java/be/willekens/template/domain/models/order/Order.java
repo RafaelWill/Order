@@ -7,10 +7,9 @@ import java.util.*;
 
 public class Order {
 
-    private static final Logger logger = LoggerFactory.getLogger(Order.class);
 
     private final UUID id;
-    private String customerId;
+    private final String customerId;
     private final List<ItemGroup> listOfOrderedItems = new LinkedList<>();
     private double totalPrice;
 

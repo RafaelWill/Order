@@ -3,10 +3,7 @@ package be.willekens.template.domain.repository;
 import be.willekens.template.domain.models.customer.Customer;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Repository
 public class CustomerRepository {
@@ -23,6 +20,10 @@ public class CustomerRepository {
 
     public Collection<Customer> getAllCustomers() {
         return Collections.unmodifiableSet(customers);
+    }
+
+    public Optional<Customer> getCustomerById(String customerId) {
+        return customers.stream().filter(customer -> customer.getId().toString().equals(customerId)).findFirst();
     }
 
 }

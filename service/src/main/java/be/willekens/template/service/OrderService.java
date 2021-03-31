@@ -24,7 +24,7 @@ public class OrderService {
 
     public Order addOrder(Order order, String customerId) {
         if (!isKnownCustomer(customerId)) {
-            logger.warn("A not registered customer tried to place an order");
+            logger.warn("A customer with id " + customerId + " tried to place an order");
             throw new CustomerDoesNotExistException("You can only place orders if you are a registered customer");
         }
         validateItemIds(order);
@@ -32,7 +32,7 @@ public class OrderService {
     }
 
     private boolean isKnownCustomer(String customerId) {
-        return customerService.getCustomerById(customerId);
+        return customerService.checkIfCustomerExists(customerId);
     }
 
     private void validateItemIds(Order order) {
