@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 @Service
 public class OrderService {
 
@@ -29,6 +31,14 @@ public class OrderService {
         }
         validateItemIds(order);
         return orderRepository.addOrder(order);
+    }
+
+    public Collection<Order> getAllOrdersByCustomerId (String customerId) {
+        if (!isKnownCustomer(customerId)) {
+            logger.warn("A customer with id " + customerId + " tried view his order history");
+            throw new CustomerDoesNotExistException("You can only view your order history if you are a registered customer");
+        }
+        return orderRepository.getAllOrdersByCustomerId(customerId);
     }
 
     private boolean isKnownCustomer(String customerId) {

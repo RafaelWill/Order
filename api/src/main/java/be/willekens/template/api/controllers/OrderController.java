@@ -1,6 +1,7 @@
 package be.willekens.template.api.controllers;
 
 import be.willekens.template.api.dto.order.OrderDto;
+import be.willekens.template.api.dto.order.OrdersByCustomerDto;
 import be.willekens.template.api.dto.order.SubmittedOrderDto;
 import be.willekens.template.api.mappers.OrderMapper;
 import be.willekens.template.service.OrderService;
@@ -28,6 +29,12 @@ public class OrderController {
     public OrderDto placeAnOrder (@RequestHeader String customerId, @RequestBody SubmittedOrderDto submittedOrderDto ) {
         logger.info("A user is requesting to create a new order");
         return orderMapper.mapToDto(orderService.addOrder(orderMapper.createOrder(submittedOrderDto, customerId),customerId));
+    }
+
+    @GetMapping(produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public OrdersByCustomerDto getAllOrdersByCustomerId (@RequestHeader String customerId) {
+        return orderMapper.mapToOrdersByCustomer(orderService.getAllOrdersByCustomerId(customerId));
     }
 
 }
