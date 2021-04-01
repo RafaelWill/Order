@@ -27,21 +27,21 @@ public class OrderController {
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDto placeAnOrder (@RequestHeader String customerId, @RequestBody SubmittedOrderDto submittedOrderDto ) {
-        logger.info("A user is requesting to create a new order");
+        logger.info("A customer with id " + customerId + " is requesting to create a new order");
         return orderMapper.mapToDto(orderService.addOrder(orderMapper.createOrder(submittedOrderDto, customerId),customerId));
     }
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public OrdersByCustomerDto getAllOrdersByCustomerId (@RequestHeader String customerId) {
-        logger.info("A user is requesting to view his history of orders");
+        logger.info("A customer with id " + customerId +  " is requesting to view his history of orders");
         return orderMapper.mapToOrdersByCustomer(orderService.getAllOrdersByCustomerId(customerId));
     }
 
     @PostMapping(path = "/{orderId}", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDto reorderExistingOrder(@RequestHeader String customerId, @RequestParam String orderId) {
-        logger.info("A user with id " + customerId + " is requesting to reorder the order with id " + orderId);
+        logger.info("A customer with id " + customerId + " is requesting to reorder the order with id " + orderId);
         return orderMapper.mapToDto(orderService.addOrder(orderMapper.createReorder(orderService.Reorder(customerId,orderId)), customerId));
     }
 
