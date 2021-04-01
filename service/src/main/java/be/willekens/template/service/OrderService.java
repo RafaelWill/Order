@@ -3,6 +3,7 @@ package be.willekens.template.service;
 import be.willekens.template.domain.models.order.Order;
 import be.willekens.template.domain.repository.OrderRepository;
 import be.willekens.template.infrastructure.exceptions.CustomerDoesNotExistException;
+import be.willekens.template.infrastructure.exceptions.NotAuthorizedException;
 import be.willekens.template.infrastructure.exceptions.OrderDoesNotExistException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +19,13 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CustomerService customerService;
     private final ItemService itemService;
+    private final EmployeeService employeeService;
 
-    public OrderService(OrderRepository orderRepository, CustomerService customerService, ItemService itemService) {
+    public OrderService(OrderRepository orderRepository, CustomerService customerService, ItemService itemService, EmployeeService employeeService) {
         this.orderRepository = orderRepository;
         this.customerService = customerService;
         this.itemService = itemService;
+        this.employeeService = employeeService;
     }
 
     public Order addOrder(Order order, String customerId) {
@@ -66,4 +69,11 @@ public class OrderService {
         order.getListOfOrderedItems().forEach(item -> itemService.getItemById(item.getItemCopy().getId().toString()));
     }
 
+    public Collection<Order> getAllOrdersByShippingDateToday(String authorizationId) {
+        if (!employeeService.isAdmin(authorizationId)){
+            logger.warn("A user with id " + authorizationId + " to update an item without the right permissions");
+            throw new NotAuthorizedException("You are not authorized to perform this action");
+        }
+        return orderRepository.getAllOrdersByShippingDateToday();
+    }
 }

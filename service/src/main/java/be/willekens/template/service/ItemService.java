@@ -56,8 +56,8 @@ public class ItemService {
 
     private Item checkIfItemExists(Optional<Item> item) {
         if (item.isEmpty()) {
-            logger.warn("No item was found");
-            throw new ItemDoesNotExistException("You can only order items that exist within our database");
+            logger.warn("The item with id " + item.get().getId().toString() + " was not found");
+            throw new ItemDoesNotExistException("No item was found");
         }
         return item.get();
     }

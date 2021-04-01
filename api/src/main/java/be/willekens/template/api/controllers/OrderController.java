@@ -1,14 +1,14 @@
 package be.willekens.template.api.controllers;
 
-import be.willekens.template.api.dto.order.OrderDto;
-import be.willekens.template.api.dto.order.OrdersByCustomerDto;
-import be.willekens.template.api.dto.order.SubmittedOrderDto;
+import be.willekens.template.api.dto.order.*;
 import be.willekens.template.api.mappers.OrderMapper;
 import be.willekens.template.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
 
 @RestController
 @RequestMapping(path = "/order")
@@ -43,6 +43,13 @@ public class OrderController {
     public OrderDto reorderExistingOrder(@RequestHeader String customerId, @PathVariable String orderId) {
         logger.info("A customer with id " + customerId + " is requesting to reorder the order with id " + orderId);
         return orderMapper.mapToDto(orderService.addOrder(orderMapper.createReorder(orderService.Reorder(customerId,orderId)), customerId));
+    }
+
+    @GetMapping(path = "/shipping", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public ShippingDto getOrdersToBeShippedToday(@RequestHeader String authorizationId) {
+        logger.info("A user with id " + authorizationId + " is requesting a list of all orders that need to be shipped today");
+        return orderMapper.mapToShippingDto(orderService.getAllOrdersByShippingDateToday(authorizationId));
     }
 
 }

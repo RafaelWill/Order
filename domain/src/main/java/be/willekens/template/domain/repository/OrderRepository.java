@@ -3,10 +3,8 @@ package be.willekens.template.domain.repository;
 import be.willekens.template.domain.models.order.Order;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -32,5 +30,12 @@ public class OrderRepository {
 
     public boolean checkIfOrderExistsForThisCustomer(Collection<Order> ordersByCustomer, String orderId) {
         return ordersByCustomer.stream().anyMatch(order -> order.getId().toString().equals(orderId));
+    }
+
+    public Collection<Order> getAllOrdersByShippingDateToday () {
+        return Collections.unmodifiableSet(orders);
+//        return orders.stream()
+//                .filter(order -> order.getListOfOrderedItems().stream().anyMatch(itemGroup -> itemGroup.getShippingDate().equals(LocalDate.now().plusDays(1))))
+//                .collect(Collectors.toList());
     }
 }

@@ -60,4 +60,7 @@ public class CustomerService {
         return customerRepository.getAllCustomers().stream().anyMatch(customer -> customer.getEmail().equalsIgnoreCase(newCustomer.getEmail()));
     }
 
+    public String getCustomerAddress(String customerId) {
+        return customerRepository.getCustomerById(customerId).get().getAddress().toString();
+    }
 }

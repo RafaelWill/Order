@@ -3,10 +3,13 @@ package be.willekens.template.api.mappers;
 import be.willekens.template.api.dto.order.*;
 import be.willekens.template.domain.models.order.ItemGroup;
 import be.willekens.template.domain.models.order.Order;
+import be.willekens.template.service.CustomerService;
 import be.willekens.template.service.ItemService;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,9 +17,11 @@ import java.util.stream.Collectors;
 public class OrderMapper {
 
     private final ItemService itemService;
+    private final CustomerService customerService;
 
-    public OrderMapper(ItemService itemService) {
+    public OrderMapper(ItemService itemService, CustomerService customerService) {
         this.itemService = itemService;
+        this.customerService = customerService;
     }
 
     /*--- Creating OrderDto & ItemGroupDto ---*/
@@ -62,6 +67,28 @@ public class OrderMapper {
 
     private List<ItemGroup> reorderItemGroups(Collection<ItemGroup> listOfOrderedItems) {
         return listOfOrderedItems.stream().map(itemGroup -> new ItemGroup(itemService.getItemById(itemGroup.getItemCopy().getId().toString()) , itemGroup.getAmountOfItems())).collect(Collectors.toList());
+    }
+
+
+    /*--- Creating ShippingDto & ItemToShipDto ---*/
+    public ShippingDto mapToShippingDto(Collection<Order> allOrdersByShippingDateToday) {
+        return new ShippingDto().setAllOrders(mapListToItemToShipDto(allOrdersByShippingDateToday));
+    }
+
+    private List<ItemToShipDto> mapListToItemToShipDto(Collection<Order> allOrdersByShippingDateToday) {
+        List<ItemToShipDto> listOfItemsToShip = new LinkedList<>();
+
+        for (Order order: allOrdersByShippingDateToday) {
+            for (ItemGroup itemGroup : order.getListOfOrderedItems()) {
+                if (itemGroup.getShippingDate().equals(LocalDate.now().plusDays(1))) {
+                    listOfItemsToShip.add(new ItemToShipDto()
+                            .setItemId(itemGroup.getItemCopy().getId().toString())
+                            .setItemName(itemGroup.getItemCopy().getName())
+                            .setAddress(customerService.getCustomerAddress(order.getCustomerId())));
+                }
+            }
+        }
+        return listOfItemsToShip;
     }
 
 }

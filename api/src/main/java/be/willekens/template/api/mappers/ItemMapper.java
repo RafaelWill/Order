@@ -19,7 +19,6 @@ public class ItemMapper {
     }
 
     /*--- Creating ItemDto ---*/
-
     public ItemDto mapToDto(Item item) {
         return new ItemDto()
                 .setId(item.getId().toString())
