@@ -38,9 +38,9 @@ public class OrderController {
         return orderMapper.mapToOrdersByCustomer(orderService.getAllOrdersByCustomerId(customerId));
     }
 
-    @PostMapping(path = "/{orderId}", produces = "application/json")
+    @PostMapping(path = "/{orderId}/reorder", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderDto reorderExistingOrder(@RequestHeader String customerId, @RequestParam String orderId) {
+    public OrderDto reorderExistingOrder(@RequestHeader String customerId, @PathVariable String orderId) {
         logger.info("A customer with id " + customerId + " is requesting to reorder the order with id " + orderId);
         return orderMapper.mapToDto(orderService.addOrder(orderMapper.createReorder(orderService.Reorder(customerId,orderId)), customerId));
     }
