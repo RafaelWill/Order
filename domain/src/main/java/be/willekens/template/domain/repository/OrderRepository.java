@@ -3,7 +3,6 @@ package be.willekens.template.domain.repository;
 import be.willekens.template.domain.models.order.Order;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
