@@ -34,7 +34,15 @@ public class OrderController {
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public OrdersByCustomerDto getAllOrdersByCustomerId (@RequestHeader String customerId) {
+        logger.info("A user is requesting to view his history of orders");
         return orderMapper.mapToOrdersByCustomer(orderService.getAllOrdersByCustomerId(customerId));
+    }
+
+    @PostMapping(path = "/{orderId}", produces = "application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrderDto reorderExistingOrder(@RequestHeader String customerId, @RequestParam String orderId) {
+        logger.info("A user with id " + customerId + " is requesting to reorder the order with id " + orderId);
+        return orderMapper.mapToDto(orderService.addOrder(orderMapper.createReorder(orderService.Reorder(customerId,orderId)), customerId));
     }
 
 }

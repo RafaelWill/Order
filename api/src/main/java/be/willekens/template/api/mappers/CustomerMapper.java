@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 @Component
 public class CustomerMapper {
 
+    /*--- Creating CustomerDto ---*/
     public CustomerDto mapToCustomerDto(Customer customer) {
         return new CustomerDto()
                 .setId(customer.getId().toString())
@@ -27,13 +28,14 @@ public class CustomerMapper {
                 .setPhoneNumber(customer.getPhoneNumber());
     }
 
+    public Collection<CustomerDto> mapListToCustomerDto(Collection<Customer> allCustomers) {
+        return allCustomers.stream().map(this::mapToCustomerDto).collect(Collectors.toList());
+    }
+
+    /*--- Creating Customer ---*/
     public Customer createCustomer(CreateCustomerDto createCustomerDto) {
         return new Customer(createCustomerDto.getFirstName(), createCustomerDto.getLastName(), createCustomerDto.getEmail(),
                 new Address(createCustomerDto.getStreetName(), createCustomerDto.getHouseNumber(), createCustomerDto.getPostalCode(), createCustomerDto.getCity()),
                 createCustomerDto.getPhoneNumber());
-    }
-
-    public Collection<CustomerDto> mapListToCustomerDto(Collection<Customer> allCustomers) {
-        return allCustomers.stream().map(this::mapToCustomerDto).collect(Collectors.toList());
     }
 }

@@ -3,13 +3,14 @@ package be.willekens.template.api.dto.order;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Collection;
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class OrderDto {
 
     private String orderId;
     private String customerId;
-    private Collection<ItemGroupDto> orderedItems;
+    private List<ItemGroupDto> orderedItems;
     private double totalPriceOfTheOrder;
 
     public OrderDto() {
@@ -41,7 +42,7 @@ public class OrderDto {
         return this;
     }
 
-    public OrderDto setOrderedItems(Collection<ItemGroupDto> orderedItems) {
+    public OrderDto setOrderedItems(List<ItemGroupDto> orderedItems) {
         this.orderedItems = orderedItems;
         return this;
     }
@@ -50,4 +51,5 @@ public class OrderDto {
         this.totalPriceOfTheOrder = totalPriceOfTheOrder;
         return this;
     }
+
 }

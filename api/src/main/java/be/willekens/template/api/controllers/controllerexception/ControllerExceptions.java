@@ -67,4 +67,10 @@ public class ControllerExceptions {
         logger.error("The requested item doesn't exist");
         httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, itemDoesNotExistException.getMessage());
     }
+
+    @ExceptionHandler(OrderDoesNotExistException.class)
+    public void orderDoesNotExist(OrderDoesNotExistException orderDoesNotExistException, HttpServletResponse httpServletResponse) throws IOException {
+        logger.error("The requested order doesn't exist");
+        httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, orderDoesNotExistException.getMessage());
+    }
 }

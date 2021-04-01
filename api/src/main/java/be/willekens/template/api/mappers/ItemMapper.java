@@ -9,9 +9,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class ItemMapper {
 
+    /*--- Creating & updating Item ---*/
     public Item createItem(CreateItemDto createItemDto) {
         return new Item(createItemDto.getName(), createItemDto.getDescription(), createItemDto.getPrice(),createItemDto.getAmountInStock());
     }
+
+    public Item updateItemToItem(UpdateItemDto updateItemDto) {
+        return new Item(updateItemDto.getName(), updateItemDto.getDescription(), updateItemDto.getPrice(), updateItemDto.getAmountInStock());
+    }
+
+    /*--- Creating ItemDto ---*/
 
     public ItemDto mapToDto(Item item) {
         return new ItemDto()
@@ -20,9 +27,5 @@ public class ItemMapper {
                 .setDescription(item.getDescription())
                 .setPrice(item.getPrice())
                 .setAmountInStock(item.getAmountInStock());
-    }
-
-    public Item updateItemToItem(UpdateItemDto updateItemDto) {
-        return new Item(updateItemDto.getName(), updateItemDto.getDescription(), updateItemDto.getPrice(), updateItemDto.getAmountInStock());
     }
 }

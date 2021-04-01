@@ -7,6 +7,7 @@ import be.willekens.template.service.ItemService;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -18,8 +19,11 @@ public class OrderMapper {
         this.itemService = itemService;
     }
 
-    public Order createOrder(SubmittedOrderDto submittedOrderDto, String customerId) {
-        return new Order(submittedOrderDto.getOrderedItems().stream().map(this::createItemGroup).collect(Collectors.toList()), customerId);
+    /*--- Creating OrderDto & ItemGroupDto ---*/
+    public OrdersByCustomerDto mapToOrdersByCustomer(Collection<Order> allOrdersByCustomerId) {
+        return new OrdersByCustomerDto()
+                .setAllOrders(allOrdersByCustomerId.stream().map(this::mapToDto).collect(Collectors.toList()))
+                .setTotalPriceOfAllOrders();
     }
 
     public OrderDto mapToDto(Order addOrder) {
@@ -30,17 +34,7 @@ public class OrderMapper {
                 .setTotalPriceOfTheOrder(addOrder.getTotalPrice());
     }
 
-    public OrdersByCustomerDto mapToOrdersByCustomer(Collection<Order> allOrdersByCustomerId) {
-        return new OrdersByCustomerDto()
-                .setAllOrders(allOrdersByCustomerId.stream().map(this::mapToDto).collect(Collectors.toList()))
-                .setTotalPriceOfAllOrders();
-    }
-
-    private ItemGroup createItemGroup(OrderedItemGroupDto orderedItemGroupDto) {
-        return new ItemGroup(itemService.getItemById(orderedItemGroupDto.getItemId()), orderedItemGroupDto.getAmountOfItems());
-    }
-
-    private Collection<ItemGroupDto> mapListToItemGroupDto(Collection<ItemGroup> listOfOrderedItems) {
+    private List<ItemGroupDto> mapListToItemGroupDto(Collection<ItemGroup> listOfOrderedItems) {
         return listOfOrderedItems.stream().map(this::mapToItemGroupDto).collect(Collectors.toList());
     }
 
@@ -51,6 +45,23 @@ public class OrderMapper {
                 .setAmountOfItems(itemGroup.getAmountOfItems())
                 .setShippingDate(itemGroup.getShippingDate())
                 .setTotalPrice(itemGroup.getTotalPrice());
+    }
+
+    /*--- Creating Order & ItemGroup ---*/
+    public Order createOrder(SubmittedOrderDto submittedOrderDto, String customerId) {
+        return new Order(submittedOrderDto.getOrderedItems().stream().map(this::createItemGroup).collect(Collectors.toList()), customerId);
+    }
+
+    private ItemGroup createItemGroup(OrderedItemGroupDto orderedItemGroupDto) {
+        return new ItemGroup(itemService.getItemById(orderedItemGroupDto.getItemId()), orderedItemGroupDto.getAmountOfItems());
+    }
+
+    public Order createReorder(Order reorder) {
+        return new Order(reorderItemGroups(reorder.getListOfOrderedItems()), reorder.getCustomerId());
+    }
+
+    private List<ItemGroup> reorderItemGroups(Collection<ItemGroup> listOfOrderedItems) {
+        return listOfOrderedItems.stream().map(itemGroup -> new ItemGroup(itemService.getItemById(itemGroup.getItemCopy().getId().toString()) , itemGroup.getAmountOfItems())).collect(Collectors.toList());
     }
 
 }

@@ -1,15 +1,15 @@
 package be.willekens.template.api.dto.order;
 
-import java.util.Collection;
+import java.util.List;
 
 public class SubmittedOrderDto {
 
-    private Collection<OrderedItemGroupDto> orderedItems;
+    private List<OrderedItemGroupDto> orderedItems;
 
     public SubmittedOrderDto() {
     }
 
-    public Collection<OrderedItemGroupDto> getOrderedItems() {
+    public List<OrderedItemGroupDto> getOrderedItems() {
         return orderedItems;
     }
 }
