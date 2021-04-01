@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
-
 @RestController
 @RequestMapping(path = "/customer")
 public class CustomerController {
@@ -31,20 +30,19 @@ public class CustomerController {
     public CustomerDto createACustomer (@RequestBody CreateCustomerDto createCustomerDto) {
         logger.info("A user is requesting to create a new member account");
         return  customerMapper.mapToCustomerDto(customerService.addCustomer(customerMapper.createCustomer(createCustomerDto)));
-//        return customerMapper.mapToCustomerDto(customerService.addCustomer(customerService.createCustomer(createCustomerDto)));
     }
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public Collection<CustomerDto> getAllCustomers(@RequestHeader String authorizationId) {
-        logger.info("A user is requesting to view all customers");
+        logger.info("A user with id " + authorizationId + " is requesting to view all customers");
         return customerMapper.mapListToCustomerDto(customerService.getAllCustomers(authorizationId));
     }
 
     @GetMapping(path = "/{customerId}" ,produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public CustomerDto getCustomerById(@RequestHeader String authorizationId, @PathVariable String customerId) {
-        logger.info("A user is requesting to view a specific customer");
+        logger.info("A user with id " + authorizationId + " is requesting to view a specific customer");
         return customerMapper.mapToCustomerDto(customerService.getCustomerById(authorizationId, customerId));
     }
 }
