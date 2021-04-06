@@ -1,7 +1,5 @@
 package be.willekens.template.domain.models.item;
 
-
-
 import be.willekens.template.infrastructure.exceptions.InvalidItemNameException;
 import be.willekens.template.infrastructure.exceptions.InvalidPriceException;
 import be.willekens.template.infrastructure.exceptions.InvalidStockValue;
@@ -9,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
-
 
 public class Item {
     
@@ -20,6 +17,7 @@ public class Item {
     private String description;
     private double price;
     private int amountInStock;
+    private StockUrgency stockUrgency;
 
     public Item(String name, String description, double price, int amountInStock) {
         this.id = UUID.randomUUID();
@@ -27,15 +25,9 @@ public class Item {
         this.description = description;
         this.price = validatePrice(price);
         this.amountInStock = validateAmountInStock(amountInStock);
+        this.stockUrgency = updateStockUrgency(amountInStock);
     }
 
-    private Item(UUID id, String name, String description, double price, int amountInStock) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.amountInStock = amountInStock;
-    }
 
     private String validateItemName(String name) {
         if (name.isBlank() || name.isEmpty()) {
@@ -81,6 +73,10 @@ public class Item {
         return amountInStock;
     }
 
+    public StockUrgency getStockUrgency() {
+        return stockUrgency;
+    }
+
     public Item setName(String name) {
         this.name = validateItemName(name);
         return this;
@@ -98,10 +94,22 @@ public class Item {
 
     public Item setAmountInStock(int amountInStock) {
         this.amountInStock = validateAmountInStock(amountInStock);
+        this.stockUrgency = updateStockUrgency(getAmountInStock());
         return this;
     }
 
-    public Item deepCloneItem() {
-        return new Item(this.getId(),this.getName(),this.getDescription(),this.getPrice(),this.getAmountInStock());
+    public void updateStockAmount(int amountOfItems) {
+        this.amountInStock = amountInStock - amountOfItems;
+        this.stockUrgency = updateStockUrgency(getAmountInStock());
+    }
+
+    public StockUrgency updateStockUrgency(int amountInStock) {
+        if (amountInStock < 5){
+            return StockUrgency.STOCK_LOW;
+        } else if (amountInStock < 10){
+            return StockUrgency.STOCK_MEDIUM;
+        } else {
+            return StockUrgency.STOCK_HIGH;
+        }
     }
 }

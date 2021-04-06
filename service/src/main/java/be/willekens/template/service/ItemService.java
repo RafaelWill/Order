@@ -9,7 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemService {
@@ -42,7 +44,7 @@ public class ItemService {
 
     public Item updateItem(String authorizationId, String itemId, Item updateItemToItem) {
         if (!employeeService.isAdmin(authorizationId)) {
-            logger.warn("A user with id " + authorizationId + " to update an item without the right permissions");
+            logger.warn("A user with id " + authorizationId + " tried to update an item without the right permissions");
             throw new NotAuthorizedException("You are not authorized to perform this action");
         }
         checkIfItemExists(itemRepository.getItemById(itemId));
@@ -60,5 +62,13 @@ public class ItemService {
             throw new ItemDoesNotExistException("No item was found");
         }
         return item.get();
+    }
+
+    public Collection<Item> getItemByStockFilter(String authorizationId, String filter) {
+        if (!employeeService.isAdmin(authorizationId)){
+            logger.warn("A user with id " + authorizationId + " tried to request a list of items without the right permissions");
+            throw new NotAuthorizedException("You are not authorized to perform this action");
+        }
+        return itemRepository.getItemsByStockAmount(filter);
     }
 }

@@ -4,6 +4,7 @@ import be.willekens.template.domain.models.item.Item;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class ItemRepository {
@@ -29,5 +30,15 @@ public class ItemRepository {
                 .setDescription(updatedItem.getDescription())
                 .setPrice(updatedItem.getPrice())
                 .setAmountInStock(updatedItem.getAmountInStock());
+    }
+
+    public Collection<Item> getItemsByStockAmount(String filter) {
+        if (filter == null) {
+            return items.stream().sorted().collect(Collectors.toList());
+        }
+        if (filter.isEmpty() || filter.isBlank()) {
+            return items.stream().sorted().collect(Collectors.toList());
+        }
+        return items.stream().filter(item -> item.getStockUrgency().getPrettifiedName().toLowerCase().contains(filter.toLowerCase())).collect(Collectors.toList());
     }
 }

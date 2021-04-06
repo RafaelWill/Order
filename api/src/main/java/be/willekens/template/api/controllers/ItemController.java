@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/item")
 public class ItemController {
@@ -36,5 +38,12 @@ public class ItemController {
     public ItemDto updateItem(@RequestHeader String authorizationId, @PathVariable String itemId, @RequestBody UpdateItemDto updateItemDto) {
         logger.info("A user with id " + authorizationId + " is requesting to update an item with id " + itemId);
         return itemMapper.mapToDto(itemService.updateItem(authorizationId ,itemId, itemMapper.updateItemToItem(updateItemDto)));
+    }
+
+    @GetMapping(path = "/stock/", produces = "application/json" )
+    @ResponseStatus(HttpStatus.OK)
+    public List<ItemDto> getItemByStockAmount(@RequestHeader String authorizationId, @RequestParam(required = false) String filter) {
+        logger.info(("A user with id " + authorizationId + " is requesting to get a list of items based on their stock"));
+        return itemMapper.mapListToDto(itemService.getItemByStockFilter(authorizationId, filter));
     }
 }

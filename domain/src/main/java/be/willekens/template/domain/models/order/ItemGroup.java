@@ -8,8 +8,8 @@ import java.time.LocalDate;
 public class ItemGroup {
 
     private final ItemCopy itemCopy;
-    private int amountOfItems;
-    private LocalDate shippingDate;
+    private final int amountOfItems;
+    private final LocalDate shippingDate;
     private final double totalPrice;
 
     public ItemGroup(Item item, int amountOfItems) {
@@ -17,6 +17,7 @@ public class ItemGroup {
         this.amountOfItems = amountOfItems;
         this.shippingDate = determineShippingDate(item.getAmountInStock(), amountOfItems);
         this.totalPrice = calculateTotalPrice();
+        item.updateStockAmount(amountOfItems);
     }
 
     private double calculateTotalPrice() {
