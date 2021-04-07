@@ -4,6 +4,7 @@ import be.willekens.template.api.dto.customer.CreateCustomerDto;
 import be.willekens.template.api.dto.customer.CustomerDto;
 import be.willekens.template.domain.models.customer.Address;
 import be.willekens.template.domain.models.customer.Customer;
+import be.willekens.template.security.users.SecurityService;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,12 @@ import java.util.stream.Collectors;
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 @Component
 public class CustomerMapper {
+
+    private final SecurityService securityService;
+
+    public CustomerMapper(SecurityService securityService) {
+        this.securityService = securityService;
+    }
 
     /*--- Creating CustomerDto ---*/
     public CustomerDto mapToCustomerDto(Customer customer) {
@@ -34,8 +41,14 @@ public class CustomerMapper {
 
     /*--- Creating Customer ---*/
     public Customer createCustomer(CreateCustomerDto createCustomerDto) {
-        return new Customer(createCustomerDto.getFirstName(), createCustomerDto.getLastName(), createCustomerDto.getEmail(),
+        securityService.addUser(createCustomerDto.getUsername(), createCustomerDto.getPassword());
+
+        Customer customer = new Customer(createCustomerDto.getFirstName(), createCustomerDto.getLastName(), createCustomerDto.getEmail(),
                 new Address(createCustomerDto.getStreetName(), createCustomerDto.getHouseNumber(), createCustomerDto.getPostalCode(), createCustomerDto.getCity()),
                 createCustomerDto.getPhoneNumber());
+
+        securityService.addUserAndCustomerId(createCustomerDto.getUsername(), customer.getId().toString());
+
+        return customer;
     }
 }

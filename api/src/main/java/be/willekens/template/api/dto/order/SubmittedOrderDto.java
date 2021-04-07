@@ -4,6 +4,7 @@ import java.util.List;
 
 public class SubmittedOrderDto {
 
+    private String customerId;
     private List<OrderedItemGroupDto> orderedItems;
 
     public SubmittedOrderDto() {
@@ -11,5 +12,9 @@ public class SubmittedOrderDto {
 
     public List<OrderedItemGroupDto> getOrderedItems() {
         return orderedItems;
+    }
+
+    public String getCustomerId() {
+        return customerId;
     }
 }

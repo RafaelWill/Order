@@ -3,6 +3,7 @@ package be.willekens.template.domain.repository;
 import be.willekens.template.domain.models.order.Order;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,10 +32,12 @@ public class OrderRepository {
         return ordersByCustomer.stream().anyMatch(order -> order.getId().toString().equals(orderId));
     }
 
-    public Collection<Order> getAllOrdersByShippingDateToday () {
-        return Collections.unmodifiableSet(orders);
-//        return orders.stream()
-//                .filter(order -> order.getListOfOrderedItems().stream().anyMatch(itemGroup -> itemGroup.getShippingDate().equals(LocalDate.now().plusDays(1))))
-//                .collect(Collectors.toList());
+    public Collection<Order> getAllOrdersByShippingByDate(LocalDate localDate) {
+        if (localDate == null) {
+            return orders.stream().sorted().collect(Collectors.toList());
+        }
+        return orders.stream()
+                .filter(order -> order.getListOfOrderedItems().stream().anyMatch(itemGroup -> itemGroup.getShippingDate().equals(localDate)))
+                .collect(Collectors.toList());
     }
 }

@@ -28,7 +28,7 @@ public class Order {
         return id;
     }
 
-    public Collection<ItemGroup> getListOfOrderedItems() {
+    public List<ItemGroup> getListOfOrderedItems() {
         return Collections.unmodifiableList(listOfOrderedItems);
     }
 

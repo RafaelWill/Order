@@ -5,6 +5,7 @@ import be.willekens.template.domain.models.order.ItemGroup;
 import be.willekens.template.domain.models.order.Order;
 import be.willekens.template.service.CustomerService;
 import be.willekens.template.service.ItemService;
+import be.willekens.template.service.OrderService;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -53,22 +54,13 @@ public class OrderMapper {
     }
 
     /*--- Creating Order & ItemGroup ---*/
-    public Order createOrder(SubmittedOrderDto submittedOrderDto, String customerId) {
-        return new Order(submittedOrderDto.getOrderedItems().stream().map(this::createItemGroup).collect(Collectors.toList()), customerId);
+    public Order createOrder(SubmittedOrderDto submittedOrderDto) {
+        return new Order(submittedOrderDto.getOrderedItems().stream().map(this::createItemGroup).collect(Collectors.toList()), submittedOrderDto.getCustomerId());
     }
 
     private ItemGroup createItemGroup(OrderedItemGroupDto orderedItemGroupDto) {
         return new ItemGroup(itemService.getItemById(orderedItemGroupDto.getItemId()), orderedItemGroupDto.getAmountOfItems());
     }
-
-    public Order createReorder(Order reorder) {
-        return new Order(reorderItemGroups(reorder.getListOfOrderedItems()), reorder.getCustomerId());
-    }
-
-    private List<ItemGroup> reorderItemGroups(Collection<ItemGroup> listOfOrderedItems) {
-        return listOfOrderedItems.stream().map(itemGroup -> new ItemGroup(itemService.getItemById(itemGroup.getItemCopy().getId().toString()) , itemGroup.getAmountOfItems())).collect(Collectors.toList());
-    }
-
 
     /*--- Creating ShippingDto & ItemToShipDto ---*/
     public ShippingDto mapToShippingDto(Collection<Order> allOrdersByShippingDateToday) {

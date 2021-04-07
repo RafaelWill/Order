@@ -4,7 +4,6 @@ import be.willekens.template.domain.models.customer.Customer;
 import be.willekens.template.domain.repository.CustomerRepository;
 import be.willekens.template.infrastructure.exceptions.CustomerDoesNotExistException;
 import be.willekens.template.infrastructure.exceptions.DuplicateEmailException;
-import be.willekens.template.infrastructure.exceptions.NotAuthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,11 +16,9 @@ public class CustomerService {
     private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
     private final CustomerRepository customerRepository;
-    private final EmployeeService employeeService;
 
-    public CustomerService(CustomerRepository customerRepository, EmployeeService employeeService) {
+    public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
-        this.employeeService = employeeService;
     }
 
     public Customer addCustomer (Customer customer) {
@@ -32,23 +29,15 @@ public class CustomerService {
         return customerRepository.addCustomer(customer);
     }
 
-    public Customer getCustomerById(String authorizationId, String customerId) {
-        if (!employeeService.isAdmin(authorizationId)) {
-            logger.warn("A user with id " + authorizationId + " is requesting to view a specific customer with id " + customerId);
-            throw new NotAuthorizedException("You are not authorized to perform this action");
-        }
+    public Customer getCustomerById(String customerId) {
         if(!checkIfCustomerExists(customerId)) {
-            logger.warn("A customer with id " + authorizationId + " tried to view a customer with id " + customerId);
+            logger.warn("A admin tried to view a customer with id " + customerId);
             throw new CustomerDoesNotExistException("This customer does not exist");
         }
         return customerRepository.getCustomerById(customerId).get();
     }
 
-    public Collection<Customer> getAllCustomers(String authorizationId) {
-        if (!employeeService.isAdmin(authorizationId)) {
-            logger.warn("A user with id " + authorizationId + " is requesting to view all customers");
-            throw new NotAuthorizedException("You are not authorized to perform this action");
-        }
+    public Collection<Customer> getAllCustomers() {
         return customerRepository.getAllCustomers();
     }
 

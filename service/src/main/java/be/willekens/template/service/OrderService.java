@@ -1,15 +1,16 @@
 package be.willekens.template.service;
 
+import be.willekens.template.domain.models.order.ItemGroup;
 import be.willekens.template.domain.models.order.Order;
 import be.willekens.template.domain.repository.OrderRepository;
-import be.willekens.template.infrastructure.exceptions.CustomerDoesNotExistException;
-import be.willekens.template.infrastructure.exceptions.NotAuthorizedException;
-import be.willekens.template.infrastructure.exceptions.OrderDoesNotExistException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -17,63 +18,45 @@ public class OrderService {
     private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     private final OrderRepository orderRepository;
-    private final CustomerService customerService;
     private final ItemService itemService;
-    private final EmployeeService employeeService;
 
-    public OrderService(OrderRepository orderRepository, CustomerService customerService, ItemService itemService, EmployeeService employeeService) {
+    public OrderService(OrderRepository orderRepository, ItemService itemService) {
         this.orderRepository = orderRepository;
-        this.customerService = customerService;
         this.itemService = itemService;
-        this.employeeService = employeeService;
     }
 
-    public Order addOrder(Order order, String customerId) {
-        if (!isKnownCustomer(customerId)) {
-            logger.warn("A customer with id " + customerId + " tried to place an order");
-            throw new CustomerDoesNotExistException("You can only place orders if you are a registered customer");
-        }
+    public Order addOrder(Order order) {
         validateItemIds(order);
         return orderRepository.addOrder(order);
     }
 
-    public Order Reorder (String customerId, String orderId) {
-        return getOrderByIdOfCustomer(getAllOrdersByCustomerId(customerId), orderId);
-    }
-
     public Collection<Order> getAllOrdersByCustomerId (String customerId) {
-        if (!isKnownCustomer(customerId)) {
-            logger.warn("A customer with id " + customerId + " tried view his order history");
-            throw new CustomerDoesNotExistException("You can only view your order history if you are a registered customer");
-        }
         return orderRepository.getAllOrdersByCustomerId(customerId);
     }
 
-    public Order getOrderByIdOfCustomer (Collection<Order> ordersByCustomer, String orderId) {
-        if (!orderExistForThisCustomer(ordersByCustomer, orderId)) {
-            logger.warn("A customer is requesting to view an order with id " + orderId + " in his own history");
-            throw new OrderDoesNotExistException("Order was not found");
-        }
+    public Order getOrderById(String orderId){
         return orderRepository.getOrderById(orderId).get();
-    }
-
-    private boolean isKnownCustomer(String customerId) {
-        return customerService.checkIfCustomerExists(customerId);
-    }
-
-    private boolean orderExistForThisCustomer (Collection<Order> ordersByCustomer, String orderId) {
-        return orderRepository.checkIfOrderExistsForThisCustomer(ordersByCustomer, orderId);
     }
 
     private void validateItemIds(Order order) {
         order.getListOfOrderedItems().forEach(item -> itemService.getItemById(item.getItemCopy().getId().toString()));
     }
 
-    public Collection<Order> getAllOrdersByShippingDateToday(String authorizationId) {
-        if (!employeeService.isAdmin(authorizationId)){
-            logger.warn("A user with id " + authorizationId + " to update an item without the right permissions");
-            throw new NotAuthorizedException("You are not authorized to perform this action");
-        }
-        return orderRepository.getAllOrdersByShippingDateToday();
+    public Collection<Order> getAllOrdersByShippingByDate(LocalDate localDate) {
+        return orderRepository.getAllOrdersByShippingByDate(localDate);
     }
+
+    public Order addReorder(String orderId) {
+        return addOrder(createReorder(getOrderById(orderId)));
+    }
+
+    private Order createReorder(Order order) {
+        return new Order(reorderItemGroups(order.getListOfOrderedItems()),order.getCustomerId());
+    }
+
+    private List<ItemGroup> reorderItemGroups(List<ItemGroup> listOfOrderedItems) {
+        return listOfOrderedItems.stream().map(itemGroup -> new ItemGroup(itemService.getItemById(itemGroup.getItemCopy().getId().toString()) , itemGroup.getAmountOfItems())).collect(Collectors.toList());
+    }
+
+
 }

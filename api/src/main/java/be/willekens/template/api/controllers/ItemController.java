@@ -8,6 +8,7 @@ import be.willekens.template.service.ItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,24 +27,27 @@ public class ItemController {
         this.itemMapper = itemMapper;
     }
 
+    @PreAuthorize("hasAuthority('CREATE_ITEM')")
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemDto addItem(@RequestHeader String authorizationId, @RequestBody CreateItemDto createItemDto) {
-        logger.info("A user with id " + authorizationId + " is requesting permission to create a new item");
-        return itemMapper.mapToDto(itemService.addItem(itemMapper.createItem(createItemDto),authorizationId));
+    public ItemDto addItem(@RequestBody CreateItemDto createItemDto) {
+        logger.info("An admin is requesting to create a new item");
+        return itemMapper.mapToDto(itemService.addItem(itemMapper.createItem(createItemDto)));
     }
 
+    @PreAuthorize("hasAuthority('UPDATE_ITEM')")
     @PutMapping(path = "/{itemId}", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ItemDto updateItem(@RequestHeader String authorizationId, @PathVariable String itemId, @RequestBody UpdateItemDto updateItemDto) {
-        logger.info("A user with id " + authorizationId + " is requesting to update an item with id " + itemId);
-        return itemMapper.mapToDto(itemService.updateItem(authorizationId ,itemId, itemMapper.updateItemToItem(updateItemDto)));
+    public ItemDto updateItem(@PathVariable String itemId, @RequestBody UpdateItemDto updateItemDto) {
+        logger.info("An admin is requesting to update an item with id " + itemId);
+        return itemMapper.mapToDto(itemService.updateItem(itemId, itemMapper.updateItemToItem(updateItemDto)));
     }
 
-    @GetMapping(path = "/stock/", produces = "application/json" )
+    @PreAuthorize("hasAuthority('CHECK_STOCK')")
+    @GetMapping(path = "/stock", produces = "application/json" )
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemDto> getItemByStockAmount(@RequestHeader String authorizationId, @RequestParam(required = false) String filter) {
-        logger.info(("A user with id " + authorizationId + " is requesting to get a list of items based on their stock"));
-        return itemMapper.mapListToDto(itemService.getItemByStockFilter(authorizationId, filter));
+    public List<ItemDto> getItemByStockAmount(@RequestParam(required = false) String filter) {
+        logger.info(("An admin is requesting to get a list of items based on their stock"));
+        return itemMapper.mapListToDto(itemService.getItemByStockFilter(filter));
     }
 }

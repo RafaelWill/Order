@@ -2,6 +2,9 @@ package be.willekens.template.api.dto.customer;
 
 public class CreateCustomerDto {
 
+    private String username;
+    private String password;
+
     private String firstName;
     private String lastName;
     private String email;
@@ -12,6 +15,14 @@ public class CreateCustomerDto {
     private String phoneNumber;
 
     public CreateCustomerDto() {
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getFirstName() {
