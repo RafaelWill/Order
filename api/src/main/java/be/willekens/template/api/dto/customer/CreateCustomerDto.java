@@ -17,6 +17,19 @@ public class CreateCustomerDto {
     public CreateCustomerDto() {
     }
 
+    public CreateCustomerDto(String username, String password, String firstName, String lastName, String email, String streetName, String houseNumber, String postalCode, String city, String phoneNumber) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.streetName = streetName;
+        this.houseNumber = houseNumber;
+        this.postalCode = postalCode;
+        this.city = city;
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -56,4 +69,6 @@ public class CreateCustomerDto {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
+
 }

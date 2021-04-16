@@ -58,5 +58,4 @@ public class OrderService {
         return listOfOrderedItems.stream().map(itemGroup -> new ItemGroup(itemService.getItemById(itemGroup.getItemCopy().getId().toString()) , itemGroup.getAmountOfItems())).collect(Collectors.toList());
     }
 
-
 }
