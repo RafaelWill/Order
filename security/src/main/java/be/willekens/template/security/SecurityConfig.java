@@ -2,13 +2,11 @@ package be.willekens.template.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.AuthenticationEntryPoint;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -17,27 +15,29 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final AuthenticationEntryPoint authEntryPoint;
-    private final AuthenticationProvider authProvider;
+    private final EurderAuthenticationProvider eurderAuthenticationProvider;
 
     @Autowired
-    public SecurityConfig(AuthenticationEntryPoint authEntryPoint, AuthenticationProvider authProvider) {
-        this.authEntryPoint = authEntryPoint;
-        this.authProvider = authProvider;
+    public SecurityConfig(EurderAuthenticationProvider eurderAuthenticationProvider) {
+        this.eurderAuthenticationProvider = eurderAuthenticationProvider;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.csrf().disable().authorizeRequests()
-                .antMatchers("/customers/signup").permitAll()
+        http.cors().and()
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/customers/signup","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/swagger-ui/**")
+                .permitAll()
                 .anyRequest().authenticated()
-                .and().httpBasic()
-                .authenticationEntryPoint(authEntryPoint);
+                .and()
+                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager()))
+                .sessionManagement().sessionCreationPolicy(STATELESS);
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(authProvider);
+        auth.authenticationProvider(eurderAuthenticationProvider);
     }
 }

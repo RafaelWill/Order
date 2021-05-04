@@ -35,41 +35,41 @@ public class CustomerControllerEndToEnd {
     @Autowired
     private CustomerMapper customerMapper;
 
-    @Test
-    void testingCustomerControllerToGetAllCustomers_restTemplate() {
-        Address address = new Address("Teststreet","5","3800","Test Town");
-        Customer customer = customerRepository.addCustomer(new Customer("Testy","Testion","test@test.be",address
-                ,"123456789"));
-
-        restTemplate.setInterceptors(List.of(new HeaderRequestInterceptor("Authorization", "Basic cmFmYWVsOmFkbWlu")));
-
-        ResponseEntity<CustomerDto[]> customy = restTemplate.getForEntity("http://localhost:" + port + "/customers", CustomerDto[].class);
-
-        assertThat(customy.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(customy.getBody()).isNotNull();
-        assertThat(customy.getBody()).isNotEmpty();
-        assertThat(Arrays.asList(customy.getBody())).contains(customerMapper.mapToCustomerDto(customer));
-    }
-
-    @Test
-    void testingCustomerControllerToGetAllCustomer_restAssured() {
-        Address address = new Address("Teststreet","5","3800","Test Town");
-        Customer customer = customerRepository.addCustomer(new Customer("Testy","Testion","test@test.be",address
-                ,"123456789"));
-
-        CustomerDto[] customers = given()
-                .baseUri("http://localhost")
-                .port(port)
-                .header("Authorization", "Basic cmFmYWVsOmFkbWlu")
-                .when().get("/customers")
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                .as(CustomerDto[].class);
-
-        assertThat(customers).isNotNull();
-        assertThat(customers).isNotEmpty();
-        assertThat(Arrays.asList(customers)).contains(customerMapper.mapToCustomerDto(customer));
-    }
+//    @Test
+//    void testingCustomerControllerToGetAllCustomers_restTemplate() {
+//        Address address = new Address("Teststreet","5","3800","Test Town");
+//        Customer customer = customerRepository.addCustomer(new Customer("Testy","Testion","test@test.be",address
+//                ,"123456789"));
+//
+//        restTemplate.setInterceptors(List.of(new HeaderRequestInterceptor("Authorization", "Basic cmFmYWVsOmFkbWlu")));
+//
+//        ResponseEntity<CustomerDto[]> customy = restTemplate.getForEntity("http://localhost:" + port + "/customers", CustomerDto[].class);
+//
+//        assertThat(customy.getStatusCode()).isEqualTo(HttpStatus.OK);
+//        assertThat(customy.getBody()).isNotNull();
+//        assertThat(customy.getBody()).isNotEmpty();
+//        assertThat(Arrays.asList(customy.getBody())).contains(customerMapper.mapToCustomerDto(customer));
+//    }
+//
+//    @Test
+//    void testingCustomerControllerToGetAllCustomer_restAssured() {
+//        Address address = new Address("Teststreet","5","3800","Test Town");
+//        Customer customer = customerRepository.addCustomer(new Customer("Testy","Testion","test@test.be",address
+//                ,"123456789"));
+//
+//        CustomerDto[] customers = given()
+//                .baseUri("http://localhost")
+//                .port(port)
+//                .header("Authorization", "Basic cmFmYWVsOmFkbWlu")
+//                .when().get("/customers")
+//                .then()
+//                .assertThat()
+//                .statusCode(HttpStatus.OK.value())
+//                .extract()
+//                .as(CustomerDto[].class);
+//
+//        assertThat(customers).isNotNull();
+//        assertThat(customers).isNotEmpty();
+//        assertThat(Arrays.asList(customers)).contains(customerMapper.mapToCustomerDto(customer));
+//    }
 }

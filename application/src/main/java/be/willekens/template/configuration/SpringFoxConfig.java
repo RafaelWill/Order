@@ -20,8 +20,8 @@ public class SpringFoxConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .ignoredParameterTypes(Authentication.class)
-                .securitySchemes(List.of(new BasicAuth("basicAuth")))
+//                .ignoredParameterTypes(Authentication.class)
+//                .securitySchemes(List.of(new BasicAuth("basicAuth")))
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
                 .paths(PathSelectors.any())

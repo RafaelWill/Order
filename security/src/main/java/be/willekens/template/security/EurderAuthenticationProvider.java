@@ -3,6 +3,7 @@ package be.willekens.template.security;
 import be.willekens.template.security.users.Role;
 import be.willekens.template.security.users.SecurityService;
 import be.willekens.template.security.users.UserAccount;
+import be.willekens.template.security.users.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -14,6 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,17 +26,21 @@ public class EurderAuthenticationProvider implements AuthenticationProvider {
     private static final Logger logger = LoggerFactory.getLogger(EurderAuthenticationProvider.class);
 
     private final SecurityService securityService;
+    private final UserRepository userRepository;
 
-    public EurderAuthenticationProvider(SecurityService securityService) {
+    public EurderAuthenticationProvider(SecurityService securityService, UserRepository userRepository) {
         this.securityService = securityService;
+        this.userRepository = userRepository;
     }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        UserAccount user = securityService.getUser(authentication.getPrincipal().toString(), authentication.getCredentials().toString());
+        UserAccount user = userRepository.getUser(authentication.getPrincipal().toString(), authentication.getCredentials().toString());
         if(user != null){
-            logger.info("Succesfully logged in!");
-            return new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), rolesToGrantedAuthorities(user.getRoles()));
+            return new UsernamePasswordAuthenticationToken(
+                    user.getUsername(),
+                    user.getPassword(),
+                    rolesToGrantedAuthorities(new ArrayList<>(user.getRoles())));
         }
         throw new BadCredentialsException("The provided credentials were invalid.");
     }
